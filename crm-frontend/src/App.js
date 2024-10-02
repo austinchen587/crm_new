@@ -1,28 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
-import RoutesConfig from './routes';  // 确保使用 RoutesConfig
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'; // 自定义样式
+import RoutesConfig from './routes'; // 使用路由配置
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <div>
-        <RoutesConfig />  {/* 使用 RoutesConfig 而不是 Routes */}
-      </div>
+      {/* 这里只加载路由 */}
+      <RoutesConfig />
     </div>
   );
 }

@@ -1,34 +1,49 @@
-// src/pages/CustomerPage.js
 import React, { useState, useEffect } from 'react';
-import CustomerList from '../components/CustomerList';
+import { Link } from 'react-router-dom';
 import { getCustomers } from '../api/customerApi';
+import CustomerList from '../components/CustomerList';
+import { getCurrentUser } from '../api/authApi';
 
 const CustomerPage = () => {
-  const [customers, setCustomers] = useState([]);  // 初始化为一个空数组
+  const [customers, setCustomers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    // 加载客户数据
     loadCustomers();
+    // 加载当前用户信息
+    loadCurrentUser();
   }, []);
 
   const loadCustomers = async () => {
     try {
       const data = await getCustomers();
-      if (Array.isArray(data)) {
-        setCustomers(data);  // 如果返回的是数组，则设置到状态中
-      } else {
-        console.error('客户数据不是数组:', data);
-        setCustomers([]);  // 如果数据不是数组，设为空数组，避免 map 错误
-      }
+      setCustomers(data);
     } catch (error) {
       console.error('加载客户数据失败:', error);
-      
+    }
+  };
+
+  const loadCurrentUser = async () => {
+    try {
+      const userData = await getCurrentUser();
+      setCurrentUser(userData);
+    } catch (error) {
+      console.error('获取当前用户信息失败:', error);
     }
   };
 
   return (
-    <div>
-      <h1>客户列表</h1>
-      <CustomerList customers={customers} />  {/* 传递给 CustomerList */}
+    <div className="container mt-5">
+      <h2>客户管理</h2>
+      {/* 添加客户按钮 */}
+      <Link to="/add-customer" className="btn btn-success mb-3">添加客户</Link>
+      {/* 确保 currentUser 被传递 */}
+      {currentUser ? (
+        <CustomerList customers={customers} currentUser={currentUser} />
+      ) : (
+        <p>正在加载用户信息...</p>
+      )}
     </div>
   );
 };
