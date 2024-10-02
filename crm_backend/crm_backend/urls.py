@@ -18,6 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/auth/', include('auth.urls')),  # 包含登录相关的路由
     path('api/customers/', include('customers.urls')),
     path('api/sales/', include('sales.urls')),
 ]

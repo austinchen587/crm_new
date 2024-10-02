@@ -34,6 +34,13 @@ YES_NO_CHOICES = [
     ('no', '否'),
 ]
 
+# 定义微信、群组、邀约选项
+DATA_SOURCE_CHOICES = [
+    ('ai', 'AI数据'),
+    ('video_number', '视频号'),
+    ('other','其他'),
+]
+
 # 客户模型类，定义了客户数据的字段
 class Customer(models.Model):
     name = models.CharField(max_length=100, verbose_name='姓名')
@@ -44,10 +51,13 @@ class Customer(models.Model):
     address = models.CharField(max_length=255, verbose_name='就业意向城市')
     city = models.CharField(max_length=255, default='Default City', verbose_name='当前所在城市')
     
+
+
     # 新增字段
     is_closed = models.BooleanField(default=False, verbose_name='是否成交')  # 是否成交字段
     is_invited = models.BooleanField(default=False, verbose_name='是否邀约')  # 是否邀约字段
     is_joined = models.BooleanField(default=False, verbose_name='是否入群')  # 是否入群字段
+    data_source = models.CharField(max_length=100, choices=DATA_SOURCE_CHOICES, default='ai', verbose_name='数据来源')
 
     attended_first_live = models.BooleanField(default=False, verbose_name='参加第一天直播')  # 参加第一天直播字段
     attended_second_live = models.BooleanField(default=False, verbose_name='参加第二天直播')  # 参加第二天直播字段

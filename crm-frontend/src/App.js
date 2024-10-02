@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+import RoutesConfig from './routes';  // 确保使用 RoutesConfig
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
@@ -18,6 +20,9 @@ function App() {
           Learn React
         </a>
       </header>
+      <div>
+        <RoutesConfig />  {/* 使用 RoutesConfig 而不是 Routes */}
+      </div>
     </div>
   );
 }

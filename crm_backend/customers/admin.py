@@ -3,6 +3,6 @@ from .models import Customer
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'phone', 'is_closed', 'attended_first_live', 'attended_second_live')
-    search_fields = ('name', 'phone')
+    list_display = ('name', 'phone','data_source', 'is_closed', 'attended_first_live', 'attended_second_live')
+    search_fields = ('name', 'phone','data_source')
     list_filter = ('is_closed', 'attended_first_live', 'attended_second_live')
