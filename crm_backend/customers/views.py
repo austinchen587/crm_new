@@ -52,21 +52,22 @@ class CustomerViewSet(viewsets.ModelViewSet):
             self.permission_denied(self.request, message="你没有权限删除此客户信息")
 
  
-    
-
-
-@api_view(['GET'])
-def get_customers(request):
-    customers = Customer.objects.all()  # 获取所有客户数据
-    serializer = CustomerSerializer(customers, many=True)  # 序列化为 JSON
-    return Response(serializer.data)  # 返回客户数据的数组
-
 
 @api_view(['POST'])
 def add_customer(request):
     if request.method == 'POST':
-        serializer = CustomerSerializer(data=request.data)
+        data = request.data.copy()
+        
+        # 设置创建者和修改者
+        data['created_by'] = request.user.id
+        data['updated_by'] = request.user.id
+
+        # 使用自定义序列化器，并确保 context 传递了 request
+        serializer = CustomerSerializer(data=data, context={'request': request})
+
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            customer = serializer.save()
+            return Response(CustomerSerializer(customer).data, status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)  # 打印错误，方便调试
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
