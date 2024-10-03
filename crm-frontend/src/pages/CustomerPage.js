@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getCustomers } from '../api/customerApi';
+import { getCustomers} from '../api/customerApi';
 import CustomerList from '../components/CustomerList';
 import { getCurrentUser } from '../api/authApi';
+
 
 const CustomerPage = () => {
   const [customers, setCustomers] = useState([]);

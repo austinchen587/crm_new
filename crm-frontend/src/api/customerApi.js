@@ -2,7 +2,7 @@
 import apiClient from './apiClient';
 
 export const getCustomers = async () => {
-  const response = await apiClient.get('customers/list/');
+  const response = await apiClient.get('customers/');
 
   // 打印 API 返回的数据，便于调试
   console.log('API 返回的客户数据:', response.data);
@@ -31,7 +31,7 @@ export const deleteCustomer = async (customerId) => {
 
 // 获取单个客户信息
 export const getCustomerById = async (id) => {
-  const response = await apiClient.get(`customers/customers/${id}/`);
+  const response = await apiClient.get(`customers/${id}/`);
   return response.data;
 };
 

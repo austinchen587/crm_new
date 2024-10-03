@@ -1,8 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './CustomerList.css';  // 自定义样式
+import { deleteCustomer } from '../api/customerApi';  // 引入删除客户的 API 方法
 
-const CustomerList = ({ customers, handleDelete, currentUser }) => {
+const CustomerList = ({ customers, currentUser }) => {
+  // 删除客户
+  const handleDelete = async (customerId) => {
+    try {
+      await deleteCustomer(customerId);
+      // 你可以根据需要在这里调用父组件提供的刷新列表函数或者在页面重新加载客户数据。
+      window.location.reload();  // 删除后刷新页面
+    } catch (error) {
+      console.error('删除客户失败:', error);
+    }
+  };
+
+
   if (!Array.isArray(customers) || customers.length === 0) {
     return <p>当前没有客户信息。</p>;
   }
@@ -14,6 +27,7 @@ const CustomerList = ({ customers, handleDelete, currentUser }) => {
           <tr>
             <th>姓名</th>
             <th>电话</th>
+            <th>归属人</th>
             <th>创建时间</th>
             <th>数据来源</th>
             <th>是否邀约</th>
@@ -29,6 +43,7 @@ const CustomerList = ({ customers, handleDelete, currentUser }) => {
             <tr key={customer.id}>
               <td>{customer.name}</td>
               <td>{customer.phone}</td>
+              <td>{customer.created_by}</td>
               <td>{new Date(customer.created_at).toLocaleDateString()}</td>
               <td>{customer.data_source}</td>
               <td>{customer.is_invited ? '是' : '否'}</td>
@@ -44,7 +59,7 @@ const CustomerList = ({ customers, handleDelete, currentUser }) => {
 
                 {/* 修改按钮 - 所有角色都有权限 */}
                 <Link to={`/edit-customer/${customer.id}`} className="btn btn-warning btn-sm mr-2">
-                  修改
+                  更新
                 </Link>
 
                 {/* 仅当当前用户有权限时，显示删除按钮 */}

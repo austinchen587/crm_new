@@ -1,0 +1,27 @@
+.homepage-container {
+    background-image: url('./images/tokyo.jpg'); /* 使用绝对路径 */
+    background-size: cover;
+    background-position: center;
+    color: white;
+  }
+  
+  h1 {
+    color: #fff;
+  }
+  
+  p.lead {
+    font-size: 1.5rem;
+    color: #ddd;
+  }
+  
+  .btn-primary {
+    padding: 10px 30px;
+  }
+  
+  .btn-secondary {
+    padding: 10px 30px;
+  }
+  
+  .vh-100 {
+    height: 100vh;
+  }
