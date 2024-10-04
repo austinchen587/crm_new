@@ -1,14 +1,22 @@
 // src/api/customerApi.js
 import apiClient from './apiClient';
 
-export const getCustomers = async () => {
-  const response = await apiClient.get('customers/');
+export const getCustomers = async (startDate, endDate, sortField = 'created_at', sortDirection = 'asc') => {
+  try {
+    const response = await apiClient.get('customers/', {
+      params: {
+        start_date: startDate || '',  // 传递空字符串，如果没有值
+        end_date: endDate || '',
+        sort_field: sortField,
+        sort_direction: sortDirection,
+      },
+    });
 
-  // 打印 API 返回的数据，便于调试
-  console.log('API 返回的客户数据:', response.data);
-
-  // 返回数据中的 customers 数组，如果存在，否则返回整个数据
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error('获取客户列表时出错:', error);
+    throw error;
+  }
 };
 
 export const addCustomer = async (customerData) => {
@@ -17,7 +25,7 @@ export const addCustomer = async (customerData) => {
     console.log('客户添加成功:', response.data);
     return response.data;
   } catch (error) {
-    console.error('添加客户失败:', error);
+    console.error('添加客户失败:', error.response ? error.response.data : error.message);  // 打印详细错误信息
     throw error;
   }
 };

@@ -1,4 +1,3 @@
-// src/pages/CustomerDetailPage.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';  // 用于获取URL中的id参数
 import { getCustomerById } from '../api/customerApi';  // 导入获取客户详情的API
@@ -39,8 +38,28 @@ const CustomerDetailPage = () => {
             <td>{customer.phone}</td>
           </tr>
           <tr>
-            <th>创建时间</th>
-            <td>{new Date(customer.created_at).toLocaleString()}</td>
+            <th>学历</th>
+            <td>{customer.education}</td>
+          </tr>
+          <tr>
+            <th>专业类别</th>
+            <td>{customer.major_category}</td>
+          </tr>
+          <tr>
+            <th>状态</th>
+            <td>{customer.status}</td>
+          </tr>
+          <tr>
+            <th>就业意向城市</th>
+            <td>{customer.address}</td>
+          </tr>
+          <tr>
+            <th>当前所在城市</th>
+            <td>{customer.city}</td>
+          </tr>
+          <tr>
+            <th>意向程度</th>
+            <td>{customer.intention}</td>
           </tr>
           <tr>
             <th>数据来源</th>
@@ -63,12 +82,36 @@ const CustomerDetailPage = () => {
             <td>{customer.attended_second_live ? '是' : '否'}</td>
           </tr>
           <tr>
+            <th>第一天观看时长</th>
+            <td>{customer.first_day_watch_duration} 分钟</td>
+          </tr>
+          <tr>
+            <th>第二天观看时长</th>
+            <td>{customer.second_day_watch_duration} 分钟</td>
+          </tr>
+          <tr>
             <th>是否成交</th>
             <td>{customer.is_closed ? '是' : '否'}</td>
           </tr>
           <tr>
+            <th>创建人</th>
+            <td>{customer.created_by ? customer.created_by : '未知'}</td>
+          </tr>
+          <tr>
+            <th>最后修改人</th>
+            <td>{customer.updated_by ? customer.updated_by : '未知'}</td>
+          </tr>
+          <tr>
+            <th>创建时间</th>
+            <td>{new Date(customer.created_at).toLocaleString()}</td>
+          </tr>
+          <tr>
+            <th>修改时间</th>
+            <td>{new Date(customer.updated_at).toLocaleString()}</td>
+          </tr>
+          <tr>
             <th>描述</th>
-            <td>{customer.description}</td>
+            <td>{customer.description || '无描述'}</td>
           </tr>
         </tbody>
       </table>

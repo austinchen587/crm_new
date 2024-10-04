@@ -6,52 +6,65 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminOrOwnerOrGroupLeader  # 自定义权限
+from django.utils.dateparse import parse_date
+from django.db.models import Q
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrOwnerOrGroupLeader]  # 登录验证
+    permission_classes = [IsAuthenticated, IsAdminOrOwnerOrGroupLeader]
 
     def get_queryset(self):
-        """
-        根据用户角色返回相应的客户列表：
-        - 管理员可以查看所有客户
-        - 组长可以查看自己和组员的客户
-        - 普通用户只能查看自己的客户
-        """
         user = self.request.user
+        queryset = Customer.objects.all()
 
+        # 根据用户角色筛选
         if user.role == 'admin':
-            return Customer.objects.all()
+            queryset = Customer.objects.all()
         elif user.role == 'group_leader':
-            return Customer.objects.filter(created_by=user) | Customer.objects.filter(created_by__group_leader=user)
+            queryset = Customer.objects.filter(Q(created_by=user) | Q(created_by__group_leader=user))
         else:
-            return Customer.objects.filter(created_by=user)
+            queryset = Customer.objects.filter(created_by=user)
 
-    def perform_update(self, serializer):
-        """
-        限制客户信息修改：只有客户的所有者、组长和管理员可以修改。
-        """
-        user = self.request.user
-        customer = self.get_object()
+        # 获取筛选参数
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        sort_field = self.request.query_params.get('sort_field', 'created_at')
+        sort_direction = self.request.query_params.get('sort_direction', 'asc')
 
-        if customer.created_by == user or user.role in ['group_leader', 'admin']:
-            serializer.save()
-        else:
-            self.permission_denied(self.request, message="你没有权限修改此客户信息")
+        # 解析日期并设置默认值
+        try:
+            # 如果没有传递 start_date，默认使用当月的第一天
+            if start_date:
+                start_datetime = make_aware(datetime.combine(parse_date(start_date), datetime.min.time()))
+            else:
+                first_day_of_month = datetime.today().replace(day=1)
+                start_datetime = make_aware(datetime.combine(first_day_of_month, datetime.min.time()))
 
-    def perform_destroy(self, instance):
-        """
-        限制客户删除：只有组长和管理员可以删除客户。
-        """
-        user = self.request.user
+            # 如果没有传递 end_date，默认使用当前时间
+            if end_date:
+                end_datetime = make_aware(datetime.combine(parse_date(end_date), datetime.max.time()))
+            else:
+                end_datetime = make_aware(datetime.combine(datetime.today(), datetime.max.time()))
 
-        if instance.created_by == user or user.role in ['group_leader', 'admin']:
-            instance.delete()
-        else:
-            self.permission_denied(self.request, message="你没有权限删除此客户信息")
+            # 验证开始日期是否在结束日期之前
+            if start_datetime > end_datetime:
+                raise ValueError("开始日期不能晚于结束日期")
+        except (TypeError, ValueError) as e:
+            raise ValueError(f"日期格式不正确，请输入正确的日期格式: {e}")
 
- 
+        # 进行时间范围筛选
+        queryset = queryset.filter(created_at__gte=start_datetime, created_at__lte=end_datetime)
+
+        # 处理排序
+        if sort_field and sort_direction:
+            if sort_direction == 'desc':
+                sort_field = f'-{sort_field}'  # 负号表示降序
+            queryset = queryset.order_by(sort_field)
+
+        return queryset
 
 @api_view(['POST'])
 def add_customer(request):

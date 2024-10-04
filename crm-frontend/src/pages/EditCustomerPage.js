@@ -24,6 +24,7 @@ const EditCustomerPage = () => {
     first_day_watch_duration: 0,
     second_day_watch_duration: 0,
     description: '',
+    intention: '低',  // 默认意向程度
   });
 
   useEffect(() => {
@@ -96,11 +97,11 @@ const EditCustomerPage = () => {
             value={customer.education}
             onChange={handleInputChange}
           >
-            <option value="below_college">大专以下</option>
-            <option value="college">大专</option>
-            <option value="bachelor">本科</option>
-            <option value="master_above">研究生及以上</option>
-            <option value="unknow">未知</option>
+            <option value="大专以下">大专以下</option>
+            <option value="大专">大专</option>
+            <option value="本科">本科</option>
+            <option value="研究生及以上<">研究生及以上</option>
+            <option value="未知">未知</option>
           </select>
         </div>
 
@@ -112,9 +113,9 @@ const EditCustomerPage = () => {
             value={customer.major_category}
             onChange={handleInputChange}
           >
-            <option value="it">IT</option>
-            <option value="non_it">非IT</option>
-            <option value="unknow">未知</option>
+            <option value="IT">IT</option>
+            <option value="非IT">非IT</option>
+            <option value="未知">未知</option>
           </select>
         </div>
 
@@ -126,9 +127,9 @@ const EditCustomerPage = () => {
             value={customer.status}
             onChange={handleInputChange}
           >
-            <option value="employed">在职</option>
-            <option value="unemployed">待业</option>
-            <option value="unknow">未知</option>
+            <option value="在职">在职</option>
+            <option value="待业">待业</option>
+            <option value="未知">未知</option>
           </select>
         </div>
 
@@ -197,9 +198,9 @@ const EditCustomerPage = () => {
             value={customer.data_source}
             onChange={handleInputChange}
           >
-            <option value="ai">AI数据</option>
-            <option value="video_number">视频号</option>
-            <option value="other">其他</option>
+            <option value="AI数据">AI数据</option>
+            <option value="视频号">视频号</option>
+            <option value="其他">其他</option>
           </select>
         </div>
 
@@ -247,6 +248,21 @@ const EditCustomerPage = () => {
             onChange={handleInputChange}
             required
           />
+        </div>
+
+        {/* 意向程度 */}
+        <div className="form-group">
+          <label>意向程度</label>
+          <select
+            className="form-control"
+            name="intention"
+            value={customer.intention}
+            onChange={handleInputChange}
+          >
+            <option value="低">低</option>
+            <option value="中">中</option>
+            <option value="高">高</option>
+          </select>
         </div>
 
         <div className="form-group">

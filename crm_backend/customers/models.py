@@ -7,50 +7,59 @@ from sales.models import SalesUser
 
 # 定义学历选项
 EDUCATION_CHOICES = [
-    ('below_college', '大专以下'),
-    ('college', '大专'),
-    ('bachelor', '本科'),
-    ('master_above', '研究生及以上'),
-    ('unknow','未知'),
+    ('大专以下', '大专以下'),
+    ('大专', '大专'),
+    ('本科', '本科'),
+    ('研究生及以上', '研究生及以上'),
+    ('未知','未知'),
 ]
 
 # 定义专业选项
 MAJOR_CHOICES = [
-    ('it', 'IT'),
-    ('non_it', '非IT'),
-    ('unknow','未知'),
+    ('IT', 'IT'),
+    ('非IT', '非IT'),
+    ('未知','未知'),
 ]
 
 # 定义状态选项
 STATUS_CHOICES = [
-    ('employed', '在职'),
-    ('unemployed', '待业'),
-    ('unknow','未知'),
+    ('在职', '在职'),
+    ('待业', '待业'),
+    ('未知','未知'),
 ]
 
 # 定义微信、群组、邀约选项
 YES_NO_CHOICES = [
-    ('yes', '是'),
-    ('no', '否'),
+    ('是', '是'),
+    ('否', '否'),
 ]
 
 # 定义微信、群组、邀约选项
 DATA_SOURCE_CHOICES = [
-    ('ai', 'AI数据'),
-    ('video_number', '视频号'),
-    ('other','其他'),
+    ('AI数据', 'AI数据'),
+    ('视频号', '视频号'),
+    ('其他','其他'),
 ]
+
+# 定义意向
+INTENTION_CHOICES = [
+    ('低', '低'),
+    ('中', '中'),
+    ('高','高'),
+    ('未知','未知'),
+]
+
 
 # 客户模型类，定义了客户数据的字段
 class Customer(models.Model):
     name = models.CharField(max_length=100, verbose_name='姓名')
     phone = models.CharField(max_length=20, verbose_name='电话')
-    education = models.CharField(max_length=20, choices=EDUCATION_CHOICES, default='college', verbose_name='学历')
-    major_category = models.CharField(max_length=10, choices=MAJOR_CHOICES, default='it', verbose_name='专业类别')
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='unemployed', verbose_name='状态')
+    education = models.CharField(max_length=20, choices=EDUCATION_CHOICES, default='大专', verbose_name='学历')
+    major_category = models.CharField(max_length=10, choices=MAJOR_CHOICES, default='IT', verbose_name='专业类别')
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='待业', verbose_name='状态')
     address = models.CharField(max_length=255, verbose_name='就业意向城市')
     city = models.CharField(max_length=255, default='Default City', verbose_name='当前所在城市')
-    
+    intention = models.CharField(max_length=20, choices=INTENTION_CHOICES, default='低', verbose_name='意向程度')
 
 
     # 新增字段
